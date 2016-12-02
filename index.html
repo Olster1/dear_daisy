@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Dear Daisy</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Cedarville+Cursive" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Oxygen:300" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Cutive" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body style="padding: 5%;">
+    <div id="title-div"><span id="main-title">Dear Daisy</span><div id="title-line-break"></div><span id="sub-title">Your little corner cafe<span></div>
+    <div id="nav-bar-container" style="line-height: 3.5vw; position: relative;"></div>
+    <div id="address-div" style="margin-top: 0%; height: 100%;">
+      <div id="address-text" style="vertical-align: top; position: relative; display: inline-block; padding-top: 0; "><p>66 Leah St, Forestville, SA 5035</p><p>Tram Stop 4</p></div>
+      <div id="map" style="display: inline-block; width: 39%;"></div>
+    </div>
+    <div id="content-div"></div>
+  
+
+<script>
+window.onload = function() {
+  var sizes = [
+    {x: 0, y: 0, width: 20, height: 25, text: "", imageUrl: "eggs.png"},
+    {x: 20, y: 0, width: 20, height: 25, text: "Hours", imageUrl: ""},
+    {x: 0, y: 25, width: 20, height: 25, text: "", imageUrl: ""},
+    {x: 20, y: 25, width: 20, height: 25, text: "", imageUrl: "burger2.jpg"},
+    {x: 40, y: 0, width: 40, height: 50, text: "", imageUrl: "dessert.jpg"},
+    {x: 80, y: 0, width: 20, height: 25, text: "", imageUrl: ""},
+    {x: 80, y: 25, width: 20, height: 25, text: "", imageUrl: "deardaisy_webimages-1.jpg"},
+    {x: 0, y: 50, width: 40, height: 25, text: "About", imageUrl: ""},
+    {x: 0, y: 75, width: 20, height: 25, text: "", imageUrl: "deardaisy_webimages-2.jpg"},
+    {x: 20, y: 75, width: 20, height: 25, text: "", imageUrl: ""},
+    {x: 40, y: 50, width: 20, height: 25, text: "", imageUrl: "deardaisy_webimages-3.jpg"},
+    {x: 40, y: 75, width: 20, height: 25, text: "", imageUrl: "burger.jpg"},
+    {x: 60, y: 50, width: 40, height: 50, text: "Menu", imageUrl: ""},
+  ];
+
+  function toggleImage(elm) {
+    var newDisplay = "none";
+    if(elm.style.display === "none") {
+      newDisplay = "inline-block";
+    }
+    elm.style.display = newDisplay;
+  }
+
+  function addBoxes(borderPercent) {
+    var container = document.getElementById("nav-bar-container");
+    container.innerHTML = "";
+
+    var mainImage = document.createElement("IMG");
+    mainImage.setAttribute('src', 'deardaisy_background.jpg');
+    mainImage.setAttribute('width', '100%');
+    // mainImage.style.filter = "grayscale(0.5)";
+    mainImage.setAttribute('background-color', 'rgba(133, 194, 182, 0.7)');
+    mainImage.setAttribute('background-blend-mode', 'multiply');
+    container.appendChild(mainImage);  
+
+    var totalWidth = mainImage.width;
+    var totalHeight = mainImage.height;
+    var borderSize = Math.floor(borderPercent/100 * totalWidth); 
+
+    for(var i = 0; i < sizes.length; ++i) {
+      var sizeObject = sizes[i];
+      var newDiv = document.createElement("DIV");
+
+      newDiv.id = "menu-grid-" + i;
+      newDiv.style.position = "absolute";    
+      newDiv.style.boxSizing = "border-box";
+      // newDiv.style.textAlign = "center";
+      // newDiv.style.verticalAlign = "middle";
+      newDiv.style.color = "white";
+      newDiv.style.fontSize = 0.09 * (sizeObject.width + sizeObject.height) + "vw";
+      newDiv.style.left = sizeObject.x + "%";    
+      newDiv.style.top = sizeObject.y + "%";    
+      
+      newDiv.style.width = sizeObject.width + "%";    
+      newDiv.style.height = sizeObject.height + "%";    
+      newDiv.style.border =  borderSize + "px solid white";  
+
+      var innerHtmlString = "";
+      if(sizeObject.text !== "") {
+        var innerDiv = document.createElement("DIV");
+        innerDiv.style.textAlign = "center";
+        innerDiv.style.position = "relative";
+        innerDiv.style.top = '50%';
+        innerDiv.style.left = '50%';
+        innerDiv.style.transform = "translateX(-50%) translateY(-50%)";
+        newDiv.setAttribute('onmouseover', "this.style.backgroundColor = 'rgba(133, 194, 182, 0.7)'");
+        newDiv.setAttribute('onmouseout', "this.style.backgroundColor = 'initial'; this.style.color = 'white'");  
+        innerHtmlString = sizeObject.text;
+        var anchor = document.createElement("A");
+        var link = "./index.html#" + sizeObject.text;
+        innerDiv.innerHTML = innerHtmlString;  
+        anchor.setAttribute('href', link);
+        anchor.appendChild(newDiv);
+        newDiv.appendChild(innerDiv); 
+
+        container.appendChild(anchor);  
+      } else {
+        if(sizeObject.imageUrl !== "") {
+          var imageId = "toggle-image" + i;
+          newDiv.addEventListener('mouseover', function(){
+            toggleImage(this.children[0]);
+          })
+          newDiv.addEventListener('mouseout', function(){
+            toggleImage(this.children[0]);
+          })
+          newDiv.style.overflow = "hidden";
+          innerHtmlString = "<img id='" + imageId + "' src=" + sizeObject.imageUrl + " style='display: none; width: 100%; min-height: 100%; max-width: 100%; height: auto; position: relative; top: -6%;'>";
+        }
+        newDiv.innerHTML = innerHtmlString;  
+        container.appendChild(newDiv);  
+      }
+      
+      // newDiv.addEventListener('onmouseover', function(){
+      //   newDiv.style.backgroundColor = '#5d8f8f';
+      //   console.log("mouseover");
+      // });
+
+      // newDiv.addEventListener('onmouseout', function(){
+      //   newDiv.style.backgroundColor = 'initial';
+      //   console.log("mouseout");
+      // });
+      
+    }
+  }
+
+  addBoxes(1.05);
+  window.addEventListener("resize", function(event) {
+    addBoxes(1.05);
+
+  });
+
+  //Router
+  function handleNewHash() {
+    var location = window.location.hash.replace(/^#\/?|\/$/g, '').split('/');
+    var elm = document.getElementById("content-div");
+    var stringToAdd = "";
+    switch (location[0])  {
+    case '':
+      stringToAdd = "Home";
+    	break;
+    case 'Hours':
+      stringToAdd = "Hours";
+      break;
+    case 'About':
+        stringToAdd = "About";
+      break;
+    case 'Menu':
+        stringToAdd = "Menu";
+      break;  
+    default:
+      
+      break;
+    }
+    elm.innerHTML = stringToAdd;
+    elm.style.height = "10em";
+    elm.style.margin = "5%";
+    elm.style.backgroundColor = "rgba(133, 194, 182, 0.7)";
+    //scroll here to div 
+  }
+
+  handleNewHash();
+  window.addEventListener('hashchange', handleNewHash, false);
+
+  function mediaQueryResponse (mq) {
+    if (mq.matches) {
+      var elm = document.getElementById("address-text");
+      elm.style.width = "100%";
+      elm.style.display = "block";
+      elm.style.textAlign = "center"; 
+      var titleLineBreak = document.getElementById("title-line-break");
+      titleLineBreak.style.display = "block";
+
+    } else {
+      var elm = document.getElementById("address-text");
+      elm.style.width = "60%";
+      elm.style.display = "inline-block";
+      elm.style.textAlign = "right"; 
+      var titleLineBreak = document.getElementById("title-line-break");
+      titleLineBreak.style.display = "none";
+    }  
+  }
+
+  var mq = window.matchMedia('screen and (max-width: 720px)');
+  mediaQueryResponse(mq);
+  mq.addListener(mediaQueryResponse);
+
+  function myMap() {
+    var myCenter = new google.maps.LatLng(-34.9535331,138.579029);
+      var mapCanvas = document.getElementById("map");
+      var mapOptions = {center: myCenter, zoom: 15};
+      var map = new google.maps.Map(mapCanvas, mapOptions);
+      var marker = new google.maps.Marker({position:myCenter});
+      marker.setMap(map);
+      var elm = document.getElementById("address-div");
+      console.log(elm.style.height);
+      mapCanvas.style.height = "10vw";
+  }
+}
+</script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDNEz6dN0anEU1AVS1NNKYOXrrzTOhNb-Y&callback=myMap"></script>
+
+</body>
+</html>
